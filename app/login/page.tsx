@@ -50,11 +50,11 @@ export default function LoginPage() {
               <span className="text-white font-bold text-xl">📊</span>
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              StatusPing
+              StatusPNG
             </span>
           </Link>
           <h1 className="mt-6 text-3xl font-bold text-gray-900">Welcome back</h1>
-          <p className="mt-2 text-gray-600">Log in to your StatusPing account</p>
+          <p className="mt-2 text-gray-600">Log in to your StatusPNG account</p>
         </div>
 
         {/* Form */}

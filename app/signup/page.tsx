@@ -52,7 +52,7 @@ export default function SignupPage() {
               <span className="text-white font-bold text-xl">📊</span>
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              StatusPing
+              StatusPNG
             </span>
           </Link>
           <h1 className="mt-6 text-3xl font-bold text-gray-900">Create your account</h1>

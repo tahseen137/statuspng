@@ -12,7 +12,7 @@ export default function Home() {
                 <span className="text-white font-bold text-lg">📊</span>
               </div>
               <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                StatusPing
+                StatusPNG
               </span>
             </div>
             <div className="flex gap-4">
@@ -298,7 +298,7 @@ export default function Home() {
             Ready to stop writing incident reports?
           </h2>
           <p className="text-xl text-blue-100 mb-8">
-            Join teams who trust StatusPing to keep their services monitored and their customers informed.
+            Join teams who trust StatusPNG to keep their services monitored and their customers informed.
           </p>
           <Link 
             href="/signup" 
@@ -317,10 +317,10 @@ export default function Home() {
               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-lg">📊</span>
               </div>
-              <span className="text-xl font-bold text-white">StatusPing</span>
+              <span className="text-xl font-bold text-white">StatusPNG</span>
             </div>
             <div className="text-sm">
-              © 2025 StatusPing. Built with 💙 by developers, for developers.
+              © 2025 StatusPNG. Built with 💙 by developers, for developers.
             </div>
           </div>
         </div>

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { getDb, type Monitor, type Incident, type Check } from './db';
+import OpenAI from 'openai';
 
 export async function checkMonitor(monitor: Monitor) {
   const db = getDb();
@@ -111,51 +112,107 @@ async function resolveIncident(monitor: Monitor) {
 }
 
 async function generateAIReport(monitor: Monitor, statusCode: number | null, errorMessage: string | null): Promise<string> {
-  // For MVP, generate a simple templated report
-  // In production, you'd call an AI API like OpenAI or Anthropic
+  // Try AI generation first, fallback to template if API key is missing or fails
+  if (process.env.OPENAI_API_KEY) {
+    try {
+      const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+      
+      const prompt = buildIncidentPrompt(monitor, statusCode, errorMessage);
+      
+      const completion = await openai.chat.completions.create({
+        model: 'gpt-4o-mini',
+        messages: [
+          {
+            role: 'system',
+            content: 'You are a professional technical writer creating customer-facing incident reports. Write clear, concise reports that explain technical issues in plain language. Be honest, transparent, and avoid corporate jargon. Keep it under 250 words.'
+          },
+          {
+            role: 'user',
+            content: prompt
+          }
+        ],
+        temperature: 0.7,
+        max_tokens: 500,
+      });
+      
+      const aiReport = completion.choices[0]?.message?.content;
+      
+      if (aiReport) {
+        return aiReport;
+      }
+    } catch (error) {
+      console.error('AI report generation failed, falling back to template:', error);
+    }
+  }
   
-  const timestamp = new Date().toISOString();
-  const duration = 'just now';
+  // Fallback to template if AI fails or API key is missing
+  return generateTemplateReport(monitor, statusCode, errorMessage);
+}
+
+function buildIncidentPrompt(monitor: Monitor, statusCode: number | null, errorMessage: string | null): string {
+  const time = new Date().toLocaleString();
+  
+  return `Write a customer-facing incident report for this service outage:
+
+Service: ${monitor.name}
+URL: ${monitor.url}
+Time detected: ${time}
+${statusCode ? `HTTP Status Code: ${statusCode}` : ''}
+${errorMessage ? `Error: ${errorMessage}` : ''}
+
+The report should include:
+1. A brief headline about what's happening
+2. What we detected (in simple terms)
+3. Impact on users
+4. Current status
+
+Keep it professional, honest, and under 200 words. Use markdown formatting.`;
+}
+
+function generateTemplateReport(monitor: Monitor, statusCode: number | null, errorMessage: string | null): string {
+  const time = new Date().toLocaleString();
   
   if (statusCode) {
-    return `**Incident Report**
+    return `## Service Disruption Detected
 
-We detected an issue with ${monitor.name} at ${new Date().toLocaleString()}.
+We detected an issue with **${monitor.name}** at ${time}.
 
-**What happened:**
+### What happened
 Our monitoring system detected that ${monitor.url} returned an HTTP ${statusCode} status code, indicating the service is currently unavailable.
 
-**Impact:**
+### Impact
 Users may be unable to access ${monitor.name} during this time.
 
-**Current status:**
+### Current status
 Our team has been automatically notified and is investigating the issue.
 
-**Timeline:**
-- ${new Date().toLocaleTimeString()}: Issue detected
-- ${new Date().toLocaleTimeString()}: Team notified
-
-We'll update this page as we learn more.`;
-  } else {
-    return `**Incident Report**
-
-We detected an issue with ${monitor.name} at ${new Date().toLocaleString()}.
-
-**What happened:**
-Our monitoring system was unable to reach ${monitor.url}. Error: ${errorMessage}
-
-**Impact:**
-Users may be unable to access ${monitor.name} during this time.
-
-**Current status:**
-Our team has been automatically notified and is investigating the issue.
-
-**Timeline:**
+### Timeline
 - ${new Date().toLocaleTimeString()}: Issue detected
 - ${new Date().toLocaleTimeString()}: Team notified
 
 We'll update this page as we learn more.`;
   }
+  
+  return `## Service Disruption Detected
+
+We detected an issue with **${monitor.name}** at ${time}.
+
+### What happened
+Our monitoring system was unable to reach ${monitor.url}.
+
+**Error:** ${errorMessage}
+
+### Impact
+Users may be unable to access ${monitor.name} during this time.
+
+### Current status
+Our team has been automatically notified and is investigating the issue.
+
+### Timeline
+- ${new Date().toLocaleTimeString()}: Issue detected
+- ${new Date().toLocaleTimeString()}: Team notified
+
+We'll update this page as we learn more.`;
 }
 
 export function getMonitorsByUserId(userId: number): Monitor[] {

@@ -31,7 +31,7 @@ export default async function DashboardPage() {
                   <span className="text-white font-bold">📊</span>
                 </div>
                 <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  StatusPing
+                  StatusPNG
                 </span>
               </Link>
               <span className="text-gray-300">|</span>

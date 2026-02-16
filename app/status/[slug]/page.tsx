@@ -169,7 +169,7 @@ export default async function StatusPage({ params }: StatusPageProps) {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-gray-500">
           Powered by{' '}
           <a href="/" className="text-purple-600 font-semibold hover:text-purple-700">
-            StatusPing
+            StatusPNG
           </a>
         </div>
       </footer>

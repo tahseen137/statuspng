@@ -8,44 +8,107 @@
 
 ---
 
-## 📖 About
+## 🎯 What is StatusPNG?
 
-**StatusPNG** is an **uptime monitoring service** that automatically generates clear, customer-facing incident reports using AI. Stop writing boring status updates—let AI turn your downtime into human-readable reports your customers will actually understand.
+StatusPNG is a modern uptime monitoring tool that uses **AI to automatically write customer-facing incident reports** when your services go down. 
 
-Perfect for:
-- 🌐 SaaS applications
-- 🔌 API endpoints
-- 🖥️ Web services
-- 📱 Mobile backends
-- 🛍️ E-commerce platforms
+Stop manually writing boring "We're experiencing technical difficulties..." updates. Let AI explain what happened, what's affected, and what's being done — in clear, human-readable language your customers will actually understand.
 
-**Live Demo:** [statuspng.vercel.app](https://statuspng.vercel.app)
+**The Problem:** Traditional monitoring tools alert you when things break, but you still have to write status page updates manually.
+
+**Our Solution:** AI reads the technical error, understands what went wrong, and writes a professional incident report for your status page — automatically.
 
 ---
 
-## ✨ Features
+## ✨ Current Features (MVP)
 
-### Core Monitoring
-- 📊 **Real-Time Monitoring** — Check services every 1-5 minutes
-- ⚡ **Instant Alerts** — Email and SMS notifications when downtime is detected
-- 📈 **Uptime Analytics** — Track response times and uptime percentage
-- 🌍 **Multi-Region Checks** — Monitor from multiple geographic locations
-- 📄 **Public Status Pages** — Beautiful status.yourcompany.com pages
+### ✅ Implemented
+- 📊 **HTTP Monitoring** — Monitor any URL with customizable intervals
+- 🤖 **AI Incident Reports** — OpenAI-powered incident report generation
+- 📄 **Public Status Pages** — Clean status pages at `/status/your-org`
+- ⚡ **Real-Time Status** — See if services are up or down instantly
+- 📈 **Check History** — View past checks and response times
+- 🔔 **Incident Tracking** — Automatic incident creation and resolution
+- 🎨 **Modern UI** — Built with Next.js 16, React 19, and Tailwind CSS 4
+- 🔐 **User Authentication** — Email/password signup and login
+- 📊 **Dashboard** — Manage all your monitors in one place
 
-### AI-Powered Features
-- 🤖 **AI Incident Reports** — Automatically generate customer-facing updates
-- 📝 **Smart Summaries** — Convert technical errors into clear language
-- 🎯 **Root Cause Analysis** — AI suggests likely causes of outages
-- 📊 **Trend Detection** — Identify patterns in downtime events
+### ⚠️ Roadmap (Coming Soon)
+- 📧 **Email Alerts** — Get notified when monitors go down
+- 📱 **SMS Alerts** — Text message notifications (Twilio)
+- 📊 **Uptime Analytics** — Calculate real uptime percentages
+- 🔑 **Keyword Monitoring** — Check for specific text on pages
+- 🔒 **SSL Monitoring** — Monitor certificate expiration
+- 🌍 **Multi-Region Checks** — Monitor from different locations
+- 🔗 **Integrations** — Slack, Discord, PagerDuty, webhooks
+- 👥 **Team Management** — Collaborate with team members
+- 📱 **Mobile App** — iOS and Android apps
 
-### Pro Features
-- 🚀 **Unlimited Monitors** (Free tier: 3 monitors)
-- ⏱️ **1-Minute Checks** (Free tier: 5-minute checks)
-- 📱 **SMS Alerts** — Get texted for critical outages
-- 🎨 **Custom Status Pages** — Brand your status page
-- 📥 **API Access** — Integrate with your tools
-- 👥 **Team Management** — Collaborate with your team
-- 📊 **Extended History** — 30-90 day retention
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 20+
+- npm or yarn
+- OpenAI API key ([get one here](https://platform.openai.com/api-keys))
+
+### Local Development
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/tahseen137/statuspng.git
+   cd statuspng
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env.local
+   ```
+   
+   Edit `.env.local` and add your OpenAI API key:
+   ```env
+   OPENAI_API_KEY=sk-...
+   ```
+
+4. **Create database directory**
+   ```bash
+   mkdir -p data
+   ```
+
+5. **Start development server**
+   ```bash
+   npm run dev
+   ```
+
+6. **Open your browser**
+   - Visit http://localhost:3000
+   - Sign up for an account
+   - Add your first monitor!
+
+---
+
+## 🌐 Deployment
+
+### Quick Deploy to Vercel
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/tahseen137/statuspng)
+
+**Important:** See [DEPLOYMENT.md](./DEPLOYMENT.md) for full production setup guide.
+
+### Production Checklist
+- [ ] Set up Turso database (SQLite won't work on Vercel)
+- [ ] Add OpenAI API key to Vercel environment variables
+- [ ] Configure cron jobs (requires Vercel Pro, or use external service)
+- [ ] Set up custom domain (optional)
+- [ ] Test monitoring and AI reports
+
+**See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed instructions.**
 
 ---
 
@@ -55,288 +118,96 @@ Perfect for:
 |-------|-----------|
 | **Framework** | Next.js 16 (App Router) |
 | **Language** | TypeScript |
-| **Authentication** | NextAuth.js |
 | **Database** | SQLite (better-sqlite3) |
-| **Email** | Nodemailer |
-| **HTTP Client** | Axios |
+| **Database (Production)** | Turso / Vercel Postgres |
+| **AI** | OpenAI GPT-4o-mini |
+| **Authentication** | Custom (cookie-based) |
 | **Styling** | Tailwind CSS 4 |
 | **Deployment** | Vercel |
+| **Monitoring** | Vercel Cron or external cron service |
 
 ---
 
-## 🚀 Getting Started
+## 🤖 How AI Incident Reports Work
 
-### Prerequisites
-- Node.js 20+
-- npm or yarn
-- Git
+When a monitor goes down, StatusPNG:
 
-### Installation
+1. **Detects the failure** (HTTP error, timeout, etc.)
+2. **Gathers context** (URL, error code, error message, timestamp)
+3. **Calls OpenAI API** with a prompt asking for a customer-facing incident report
+4. **Stores the AI-generated report** in the database
+5. **Displays it on your public status page**
 
-```bash
-# Clone the repository
-git clone https://github.com/tahseen137/statuspng.git
-cd statuspng
-
-# Install dependencies
-npm install
+### Example Input (Technical Error)
+```
+Service: Production API
+URL: https://api.example.com
+Error: ECONNREFUSED
+Status Code: null
+Time: 2026-02-16 14:30:00
 ```
 
-### Environment Variables
+### Example Output (AI Report)
+```markdown
+## Service Disruption Detected
 
-Create a `.env.local` file in the root directory:
+We're currently experiencing issues with our Production API.
 
-```env
-# Database
-DATABASE_URL="file:./data/statuspng.db"
+### What happened
+At 2:30 PM EST, our monitoring system detected that api.example.com 
+became unreachable. Connection attempts are being refused, which 
+typically indicates the server is down or experiencing network issues.
 
-# NextAuth
-NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="your-random-secret-here"
+### Impact
+Users may be unable to access the application during this time.
 
-# Email (for alerts)
-SMTP_HOST="smtp.gmail.com"
-SMTP_PORT="587"
-SMTP_USER="your-email@gmail.com"
-SMTP_PASSWORD="your-app-password"
-SMTP_FROM="noreply@statuspng.com"
-
-# Optional: SMS (Twilio)
-TWILIO_ACCOUNT_SID="your-twilio-sid"
-TWILIO_AUTH_TOKEN="your-twilio-token"
-TWILIO_PHONE_NUMBER="+1234567890"
-
-# Optional: AI (OpenAI for incident reports)
-OPENAI_API_KEY="sk-..."
+### Current status
+Our engineering team has been automatically notified and is 
+investigating. We'll provide updates as we learn more.
 ```
 
-### Development
-
-```bash
-# Start development server
-npm run dev
-
-# Open http://localhost:3000
-```
-
-### Build for Production
-
-```bash
-# Build the application
-npm run build
-
-# Start production server
-npm start
-```
+**Cost:** ~$0.002 per incident report (GPT-4o-mini)
 
 ---
 
-## 📦 Deployment
+## 💡 Use Cases
 
-### Deploy to Vercel (Recommended)
+### For SaaS Companies
+- Monitor your API endpoints
+- Auto-generate status page updates
+- Keep customers informed during outages
 
-1. **Push to GitHub**
-   ```bash
-   git add .
-   git commit -m "Initial commit"
-   git push origin main
-   ```
+### For Developers
+- Monitor side projects
+- Get AI-written incident reports
+- Self-host and customize
 
-2. **Deploy to Vercel**
-   - Visit [vercel.com](https://vercel.com)
-   - Import your GitHub repository
-   - Add environment variables (see above)
-   - Deploy!
-
-3. **Set Up Database**
-   - Use [Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres) or [Turso](https://turso.tech)
-   - Update `DATABASE_URL` in environment variables
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/tahseen137/statuspng)
+### For Agencies
+- Monitor client websites
+- Professional status pages
+- White-label ready
 
 ---
 
-## 🎯 Usage
-
-### Create a Monitor
-
-1. **Sign up** at your StatusPNG instance
-2. **Add Monitor**
-   - Name: "Production API"
-   - URL: `https://api.yourapp.com/health`
-   - Check Interval: 1 minute (Pro) or 5 minutes (Free)
-   - Alert Email: your-email@example.com
-
-3. **Configure Notifications**
-   - Email alerts (always enabled)
-   - SMS alerts (Pro)
-   - Slack webhooks (Team)
-
-4. **Set Up Status Page**
-   - Public URL: `status.yourapp.com`
-   - Custom branding (Pro)
-   - Display selected monitors
-
-### Monitor Types
-
-#### HTTP/HTTPS
-```javascript
-{
-  "url": "https://api.example.com",
-  "method": "GET",
-  "expectedStatus": 200,
-  "timeout": 30
-}
-```
-
-#### Keyword Monitoring
-```javascript
-{
-  "url": "https://yoursite.com",
-  "keyword": "Welcome",
-  "expectPresent": true
-}
-```
-
-#### SSL Certificate
-```javascript
-{
-  "url": "https://secure.example.com",
-  "checkSSL": true,
-  "warnDaysBefore": 7
-}
-```
-
----
-
-## 🤖 AI Incident Reports
-
-When a monitor goes down, StatusPNG automatically generates a report:
-
-### Input (Technical Error)
-```
-ECONNREFUSED 52.1.2.3:443
-Timeout after 30000ms
-DNS resolution failed
-```
-
-### Output (AI-Generated Report)
-```
-🔴 Incident Detected
-
-We're currently experiencing issues with our API service.
-
-What happened:
-Our monitoring systems detected that the API at api.example.com 
-became unreachable at 2:47 PM EST. Connection attempts are timing 
-out, which typically indicates a server or network issue.
-
-Impact:
-Users may experience errors when trying to access the application.
-
-Status:
-Our team has been automatically notified and is investigating.
-
-We'll provide updates as we learn more.
-```
-
----
-
-## 📊 Dashboard Features
-
-### Monitor Overview
-- 🟢 **Status Indicators** — Visual up/down states
-- 📈 **Response Time Graphs** — Historical performance
-- ⏱️ **Uptime Percentage** — 7/30/90 day averages
-- 📋 **Recent Incidents** — Timeline of outages
-
-### Incident Management
-- 🚨 **Active Incidents** — Ongoing outages
-- 📝 **Manual Updates** — Override AI reports
-- ✅ **Resolution Tracking** — Time to recovery
-- 📧 **Notification Log** — Alert history
-
-### Analytics
-- 📊 **Uptime Trends** — Performance over time
-- ⏱️ **Response Time Distribution** — p50, p95, p99
-- 🌍 **Geographic Performance** — Multi-region checks
-- 📉 **Incident Frequency** — Patterns and trends
-
----
-
-## 🔌 API Reference
-
-### `GET /api/monitors`
-List all monitors for the authenticated user.
-
-**Response:**
-```json
-{
-  "monitors": [
-    {
-      "id": "mon_123",
-      "name": "Production API",
-      "url": "https://api.example.com",
-      "status": "up",
-      "uptime": 99.9,
-      "lastCheck": "2026-02-06T12:00:00Z"
-    }
-  ]
-}
-```
-
-### `POST /api/monitors`
-Create a new monitor.
-
-**Request:**
-```json
-{
-  "name": "My API",
-  "url": "https://api.example.com/health",
-  "interval": 60,
-  "alertEmail": "you@example.com"
-}
-```
-
-### `GET /api/incidents/[monitorId]`
-Get incident history for a monitor.
-
-**Response:**
-```json
-{
-  "incidents": [
-    {
-      "id": "inc_456",
-      "startedAt": "2026-02-06T02:30:00Z",
-      "resolvedAt": "2026-02-06T02:45:00Z",
-      "duration": 900,
-      "aiReport": "We experienced a brief outage..."
-    }
-  ]
-}
-```
-
----
-
-## 💳 Pricing
+## 📊 Pricing
 
 ### Free
 - ✅ 3 monitors
 - ✅ 5-minute checks
-- ✅ Email alerts
 - ✅ AI incident reports
 - ✅ Public status page
+- ✅ Unlimited checks
 
-### Pro - $9/month
-- ✅ **Unlimited monitors**
+### Pro - $9/month *(Coming Soon)*
+- ✅ Unlimited monitors
 - ✅ 1-minute checks
 - ✅ Email + SMS alerts
 - ✅ Advanced AI reports
-- ✅ Custom status page branding
+- ✅ Custom branding
 - ✅ 30-day history
 
-### Team - $29/month
-- ✅ **Everything in Pro**
+### Team - $29/month *(Coming Soon)*
+- ✅ Everything in Pro
 - ✅ Team members (5)
 - ✅ Slack integration
 - ✅ API access
@@ -345,40 +216,174 @@ Get incident history for a monitor.
 
 ---
 
-## 🎨 Status Page Customization
+## 🧑‍💻 Development
 
-### Custom Domain
-```javascript
-// Add CNAME record:
-status.yourcompany.com → statuspng.vercel.app
-
-// Configure in dashboard:
-{
-  "customDomain": "status.yourcompany.com",
-  "logo": "https://yourcompany.com/logo.png",
-  "brandColor": "#4F46E5"
-}
+### Project Structure
+```
+statuspng/
+├── app/                  # Next.js App Router pages
+│   ├── api/             # API routes
+│   ├── dashboard/       # Dashboard page
+│   ├── status/[slug]/   # Public status pages
+│   ├── login/           # Login page
+│   ├── signup/          # Signup page
+│   └── page.tsx         # Landing page
+├── lib/                 # Core business logic
+│   ├── auth.ts          # Authentication
+│   ├── db.ts            # Database initialization
+│   ├── monitor.ts       # Monitoring logic + AI reports
+│   └── session.ts       # Session management
+├── public/              # Static assets
+├── data/                # SQLite database (local dev)
+└── vercel.json          # Vercel cron configuration
 ```
 
-### Embed Widget
-```html
-<!-- Add to your website -->
-<script src="https://statuspng.vercel.app/widget.js" 
-        data-status-page="your-page-id">
-</script>
+### Build & Test
+```bash
+# Install dependencies
+npm install
+
+# Run development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm start
+
+# Lint code
+npm run lint
 ```
+
+### Environment Variables
+See [.env.example](./.env.example) for all available environment variables.
+
+**Required:**
+- `OPENAI_API_KEY` — For AI incident reports
+
+**Optional:**
+- `SMTP_*` — For email alerts (not yet implemented)
+- `TWILIO_*` — For SMS alerts (not yet implemented)
+- `TURSO_*` — For production database
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Here's how you can help:
 
+### Quick Contributions
+- 🐛 Report bugs via [GitHub Issues](https://github.com/tahseen137/statuspng/issues)
+- 💡 Suggest features
+- 📝 Improve documentation
+- ⭐ Star the repo if you find it useful!
+
+### Code Contributions
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes
+4. Run tests and build (`npm run build`)
+5. Commit your changes (`git commit -m 'Add amazing feature'`)
+6. Push to your branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
+
+### Priority Areas
+- Email alert implementation
+- SMS alert implementation (Twilio)
+- Uptime percentage calculations
+- Keyword monitoring
+- SSL certificate monitoring
+- Tests (currently none!)
+
+---
+
+## 📚 Documentation
+
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)** — Full production deployment guide
+- **[AUDIT.md](./AUDIT.md)** — Technical audit and analysis
+- **.env.example** — Environment variable reference
+- **README.md** — This file
+
+---
+
+## 🔒 Security
+
+### Current Security Features
+- ✅ HTTP-only cookies for sessions
+- ✅ Password hashing with bcrypt
+- ✅ HTTPS in production (via Vercel)
+- ✅ Environment variable protection
+
+### Known Security Todos
+- ⚠️ CSRF protection (should use iron-session or NextAuth)
+- ⚠️ Rate limiting on API routes
+- ⚠️ Input sanitization
+- ⚠️ 2FA support
+
+**Found a security issue?** Please email security@example.com (TODO: set up security email)
+
+---
+
+## 📈 Roadmap
+
+### v1.0 (MVP) - ✅ DONE
+- [x] HTTP monitoring
+- [x] AI incident reports
+- [x] Public status pages
+- [x] User authentication
+- [x] Dashboard UI
+- [x] Cron configuration
+
+### v1.1 (Alerts)
+- [ ] Email alerts (SMTP)
+- [ ] SMS alerts (Twilio)
+- [ ] Alert preferences
+- [ ] Notification templates
+
+### v1.2 (Analytics)
+- [ ] Uptime percentage calculation
+- [ ] Response time charts
+- [ ] Incident history graphs
+- [ ] Export data (CSV)
+
+### v1.3 (Advanced Monitoring)
+- [ ] Keyword monitoring
+- [ ] SSL certificate monitoring
+- [ ] Multi-region checks
+- [ ] Port monitoring
+- [ ] DNS monitoring
+
+### v2.0 (Team & Integrations)
+- [ ] Team management
+- [ ] Slack integration
+- [ ] Discord integration
+- [ ] PagerDuty integration
+- [ ] Webhook support
+- [ ] Public API
+
+### v3.0 (Enterprise)
+- [ ] Custom branding
+- [ ] SSO/SAML
+- [ ] Audit logs
+- [ ] SLA tracking
+- [ ] Advanced permissions
+
+---
+
+## 🎓 Learn More
+
+### Next.js
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Learn Next.js](https://nextjs.org/learn)
+
+### OpenAI
+- [OpenAI API Documentation](https://platform.openai.com/docs)
+- [OpenAI Pricing](https://openai.com/pricing)
+
+### Deployment
+- [Vercel Documentation](https://vercel.com/docs)
+- [Turso Documentation](https://docs.turso.tech)
 
 ---
 
@@ -386,19 +391,43 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+**TL;DR:** You can use this code for anything (including commercial projects), just keep the copyright notice.
+
 ---
 
 ## 🙏 Acknowledgments
 
 - Built with [Next.js](https://nextjs.org/)
-- Authentication by [NextAuth.js](https://next-auth.js.org/)
-- Database powered by [better-sqlite3](https://github.com/WiseLibs/better-sqlite3)
+- AI powered by [OpenAI](https://openai.com)
+- Database by [better-sqlite3](https://github.com/WiseLibs/better-sqlite3)
 - Deployed on [Vercel](https://vercel.com)
+- Icons from emoji (📊✨🚀)
 
 ---
 
-## 📧 Contact
+## 💬 Community & Support
 
-For questions or support, please open an issue on GitHub.
+- 🐛 **Issues:** [GitHub Issues](https://github.com/tahseen137/statuspng/issues)
+- 💬 **Discussions:** [GitHub Discussions](https://github.com/tahseen137/statuspng/discussions)
+- 📧 **Email:** support@example.com (TODO: set up support email)
+- 🐦 **Twitter:** [@statuspng](https://twitter.com/statuspng) (TODO: create account)
+
+---
+
+## ⭐ Star History
+
+If you find StatusPNG useful, please consider starring the repo! It helps others discover the project.
+
+[![Star History Chart](https://api.star-history.com/svg?repos=tahseen137/statuspng&type=Date)](https://star-history.com/#tahseen137/statuspng&Date)
+
+---
+
+<div align="center">
+
+**Built with 💙 by developers, for developers.**
 
 **Stop writing incident reports. Let AI do it for you. 🤖📊**
+
+[Get Started](https://statuspng.vercel.app) • [Documentation](./DEPLOYMENT.md) • [Report Bug](https://github.com/tahseen137/statuspng/issues)
+
+</div>
